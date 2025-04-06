@@ -4394,7 +4394,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 812483864889648869, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.846
+      value: -0.157
       objectReference: {fileID: 0}
     - target: {fileID: 1573079889487165186, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: anime
