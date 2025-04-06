@@ -44,6 +44,9 @@ public class IsoCharacterController2D : MonoBehaviour
     // Add a new variable to track facing direction
     private Vector2 facingDirection = Vector2.right; // Default facing right (can be adjusted later)
 
+    // Track respawn point
+    private Vector3 respawnPoint;
+
     void Awake()
     {
         if (instance == null)
@@ -64,6 +67,9 @@ public class IsoCharacterController2D : MonoBehaviour
         originalSwordRot = sword.transform.localRotation;
 
         currentHealth = maxHealth;
+
+        // Set initial respawn point to the player's starting position
+        respawnPoint = transform.position;
     }
 
     void Update()
@@ -134,52 +140,52 @@ public class IsoCharacterController2D : MonoBehaviour
         }
     }
 
-IEnumerator SwordSlash()
-{
-    canSlash = false;
-    isSlashing = true;
-
-    // Use the facing direction for the attack
-    Vector2 attackDirection = facingDirection != Vector2.zero ? facingDirection : Vector2.right;
-
-    // Calculate the spawn position for the hitbox
-    Vector2 spawnPosition = (Vector2)transform.position + attackDirection.normalized * hitboxOffsetDistance;
-
-    // Instantiate the hitbox and set its position
-    GameObject hitbox = Instantiate(hitboxPrefab, spawnPosition, Quaternion.identity);
-
-    // Set the hitbox as a child of the character's transform
-    hitbox.transform.SetParent(transform);
-
-    // Make the hitbox face the right direction
-    hitbox.transform.localScale = new Vector3(
-        attackDirection.x > 0 ? Mathf.Abs(hitbox.transform.localScale.x) : -Mathf.Abs(hitbox.transform.localScale.x),
-        hitbox.transform.localScale.y,
-        hitbox.transform.localScale.z
-    );
-
-    // Optional: Reset hitbox local position and rotation to match the parent if needed
-    hitbox.transform.localPosition = spawnPosition - (Vector2)transform.position;
-    hitbox.transform.localRotation = Quaternion.identity;
-
-    hitEnemies.Clear();
-
-    float hitboxDuration = 0.2f;
-    float timer = 0f;
-
-    while (timer < hitboxDuration)
+    IEnumerator SwordSlash()
     {
-        DamageEnemiesInRange(hitbox);
-        timer += Time.deltaTime;
-        yield return null;
+        canSlash = false;
+        isSlashing = true;
+
+        // Use the facing direction for the attack
+        Vector2 attackDirection = facingDirection != Vector2.zero ? facingDirection : Vector2.right;
+
+        // Calculate the spawn position for the hitbox
+        Vector2 spawnPosition = (Vector2)transform.position + attackDirection.normalized * hitboxOffsetDistance;
+
+        // Instantiate the hitbox and set its position
+        GameObject hitbox = Instantiate(hitboxPrefab, spawnPosition, Quaternion.identity);
+
+        // Set the hitbox as a child of the character's transform
+        hitbox.transform.SetParent(transform);
+
+        // Make the hitbox face the right direction
+        hitbox.transform.localScale = new Vector3(
+            attackDirection.x > 0 ? Mathf.Abs(hitbox.transform.localScale.x) : -Mathf.Abs(hitbox.transform.localScale.x),
+            hitbox.transform.localScale.y,
+            hitbox.transform.localScale.z
+        );
+
+        // Optional: Reset hitbox local position and rotation to match the parent if needed
+        hitbox.transform.localPosition = spawnPosition - (Vector2)transform.position;
+        hitbox.transform.localRotation = Quaternion.identity;
+
+        hitEnemies.Clear();
+
+        float hitboxDuration = 0.2f;
+        float timer = 0f;
+
+        while (timer < hitboxDuration)
+        {
+            DamageEnemiesInRange(hitbox);
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(hitbox);
+
+        isSlashing = false;
+        yield return new WaitForSeconds(slashSwingTime);
+        canSlash = true;
     }
-
-    Destroy(hitbox);
-
-    isSlashing = false;
-    yield return new WaitForSeconds(slashSwingTime);
-    canSlash = true;
-}
 
     void DamageEnemiesInRange(GameObject hitbox)
     {
@@ -222,5 +228,17 @@ IEnumerator SwordSlash()
     {
         currentHealth = maxHealth;
     }
-}
 
+    // Update the respawn point when the player hits a checkpoint
+    public void SetRespawnPoint(Vector3 newRespawnPoint)
+    {
+        respawnPoint = newRespawnPoint;
+    }
+
+    // Respawn the player at the last checkpoint
+    public void RespawnPlayer()
+    {
+        transform.position = respawnPoint;
+        currentHealth = maxHealth;
+    }
+}

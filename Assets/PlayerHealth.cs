@@ -7,6 +7,13 @@ public class PlayerHealth : MonoBehaviour
     public float health = 100f;     // Başlangıç sağlığı
     public Image healthBar;         // Image tipi sağlık barı (Fill Method: Filled)
 
+    private IsoCharacterController2D characterController;
+
+    void Start()
+    {
+        characterController = GetComponent<IsoCharacterController2D>();
+    }
+
     public void TakeDamage(float damage)
     {
         if (health <= 0) return;
@@ -36,6 +43,8 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player has died!");
         // Game Over işlemleri buraya
+        characterController.RespawnPlayer();
+        healthBar.fillAmount = health / 100f;
     }
 
     IEnumerator IFrames()
