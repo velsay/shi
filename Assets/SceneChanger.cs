@@ -22,12 +22,12 @@ public class SceneChanger : MonoBehaviour
         }
     }
 
-    public void TriggerSceneTransition(string sceneName)
+    public void TriggerSceneTransition(int sceneInt)
     {
-        StartCoroutine(FadeAndChangeScene(sceneName));
+        StartCoroutine(FadeAndChangeScene(sceneInt));
     }
 
-    IEnumerator FadeAndChangeScene(string sceneName)
+    IEnumerator FadeAndChangeScene(int sceneInt)
     {
         if (fadePanel != null)
         {
@@ -41,6 +41,6 @@ public class SceneChanger : MonoBehaviour
             }
         }
 
-        SceneManager.LoadScene(sceneName);  // Sahne ismini geçer
+        SceneManager.LoadScene(sceneInt);  // Sahne ismini geçer
     }
 }

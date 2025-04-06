@@ -17,6 +17,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/dungeon 4.unity
     guid: 580d1492c1347bc4cbb44969ea0ec2e4
+  - enabled: 1
+    path: Assets/Scenes/boss.unity
+    guid: f5397f44358b7de41b58aeb4688ed5b4
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
