@@ -125,7 +125,7 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: "KRAL 2D PIKSEL KARAKTER (AN\u0130MASYONSUZ)"
     originalName: 
-    pivot: {x: 0.78124946, y: 0.42312503}
+    pivot: {x: 0.6642857, y: -2.0714285}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 

@@ -62,17 +62,22 @@ public class IsoCharacterController2D : MonoBehaviour
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         Vector2 rawInput = new Vector2(h, v).normalized;
-        inputDirection = rawInput;
+        inputDirection = IsoTransform(rawInput).normalized;
 
         currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
 
-        UpdateAnimatorDirection();
+        UpdateAnimatorDirection(h, v);
 
         if (inputDirection.x > 0)
+        {
             spriteRenderer.flipX = false;
+        }
         else if (inputDirection.x < 0)
+        {
             spriteRenderer.flipX = true;
+        }
 
+        // Kılıcı sprite yönüne göre aynala
         Vector3 swordScale = sword.transform.localScale;
         swordScale.x = spriteRenderer.flipX ? -Mathf.Abs(swordScale.x) : Mathf.Abs(swordScale.x);
         sword.transform.localScale = swordScale;
@@ -81,43 +86,24 @@ public class IsoCharacterController2D : MonoBehaviour
         {
             StartCoroutine(SwordSlash());
         }
-
-        Debug.DrawRay(transform.position, inputDirection, Color.green);
     }
 
     void FixedUpdate()
     {
-        if (inputDirection != Vector2.zero)
-        {
-            rb.MovePosition(rb.position + inputDirection * currentSpeed * Time.fixedDeltaTime);
-        }
+        rb.MovePosition(rb.position + inputDirection * currentSpeed * Time.fixedDeltaTime);
     }
 
-    void UpdateAnimatorDirection()
+    Vector2 IsoTransform(Vector2 input)
     {
-        // Yürüyorsa true
-        anime.SetBool("IsWalking", inputDirection != Vector2.zero);
+        return new Vector2(input.x - input.y, (input.x + input.y) / 2);
+    }
 
-        // Yön sadece tuş basıldığında güncellenir
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            anime.SetBool("isgoingup", true);
-            anime.SetBool("isgoingdown", false);
-            anime.SetBool("IsMovingSide", false);
-        }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            anime.SetBool("isgoingup", false);
-            anime.SetBool("isgoingdown", true);
-            anime.SetBool("IsMovingSide", false);
-        }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) ||
-                 Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            anime.SetBool("isgoingup", false);
-            anime.SetBool("isgoingdown", false);
-            anime.SetBool("IsMovingSide", true);
-        }
+    void UpdateAnimatorDirection(float h, float v)
+    {
+        anime.SetBool("isgoingup", v > 0);
+        anime.SetBool("isgoingdown", v < 0);
+        anime.SetBool("isgoingleft", h < 0);
+        anime.SetBool("isgoingright", h > 0);
     }
 
     IEnumerator SwordSlash()
@@ -208,17 +194,16 @@ public class IsoCharacterController2D : MonoBehaviour
     {
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
-
         if (currentHealth <= 0)
-        {
-            PlayerRespawnManager.Instance.RespawnPlayer();
-        }
+{
+    PlayerRespawnManager.Instance.RespawnPlayer();
+}
 
-        // Opsiyonel: hasar efekti vs.
+        // You can add animation or effects for damage here
     }
-
     public void RestoreHealth()
-    {
-        currentHealth = maxHealth;
-    }
+{
+    currentHealth = maxHealth;
+}
+
 }
