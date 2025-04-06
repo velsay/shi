@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      arka_0: -6652128767959804127
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
