@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class IsoCharacterController2D : MonoBehaviour
@@ -8,20 +9,22 @@ public class IsoCharacterController2D : MonoBehaviour
 
     public Animator anime;
 
-    [Header("Hareket Ayarları")]
+    [Header("Movement Settings")]
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
 
-    [Header("Kılıç Ayarları")]
+    [Header("Sword Settings")]
     public GameObject sword;
+    public GameObject hitboxPrefab;
     public float slashDownTime = 0.1f;
     public float slashSwingTime = 0.1f;
     public float returnTime = 0.2f;
     public float downwardOffset = 0.2f;
     public float slashDistance = 0.5f;
     public float tiltAngle = 50f;
+    public float hitboxOffsetDistance = 0.5f;
 
-    [Header("Can Sistemi")]
+    [Header("Health System")]
     private int maxHealth = 100;
     private int currentHealth;
 
@@ -32,8 +35,14 @@ public class IsoCharacterController2D : MonoBehaviour
     private Vector3 originalSwordPos;
     private Quaternion originalSwordRot;
     private bool isSlashing = false;
+    private bool canSlash = true;
 
     private SpriteRenderer spriteRenderer;
+
+    private HashSet<Collider2D> hitEnemies = new HashSet<Collider2D>();
+
+    // Add a new variable to track facing direction
+    private Vector2 facingDirection = Vector2.right; // Default facing right (can be adjusted later)
 
     void Awake()
     {
@@ -59,10 +68,17 @@ public class IsoCharacterController2D : MonoBehaviour
 
     void Update()
     {
+        // Get input for movement
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         Vector2 rawInput = new Vector2(h, v).normalized;
         inputDirection = rawInput;
+
+        // Track the facing direction based on input
+        if (inputDirection != Vector2.zero)
+        {
+            facingDirection = inputDirection;  // Update facing direction when the player moves
+        }
 
         currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
 
@@ -77,7 +93,7 @@ public class IsoCharacterController2D : MonoBehaviour
         swordScale.x = spriteRenderer.flipX ? -Mathf.Abs(swordScale.x) : Mathf.Abs(swordScale.x);
         sword.transform.localScale = swordScale;
 
-        if (Input.GetMouseButtonDown(0) && !isSlashing)
+        if (Input.GetMouseButtonDown(0) && canSlash)
         {
             StartCoroutine(SwordSlash());
         }
@@ -95,10 +111,8 @@ public class IsoCharacterController2D : MonoBehaviour
 
     void UpdateAnimatorDirection()
     {
-        // Yürüyorsa true
         anime.SetBool("IsWalking", inputDirection != Vector2.zero);
 
-        // Yön sadece tuş basıldığında güncellenir
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             anime.SetBool("isgoingup", true);
@@ -120,77 +134,66 @@ public class IsoCharacterController2D : MonoBehaviour
         }
     }
 
-    IEnumerator SwordSlash()
+IEnumerator SwordSlash()
+{
+    canSlash = false;
+    isSlashing = true;
+
+    // Use the facing direction for the attack
+    Vector2 attackDirection = facingDirection != Vector2.zero ? facingDirection : Vector2.right;
+
+    // Calculate the spawn position for the hitbox
+    Vector2 spawnPosition = (Vector2)transform.position + attackDirection.normalized * hitboxOffsetDistance;
+
+    // Instantiate the hitbox and set its position
+    GameObject hitbox = Instantiate(hitboxPrefab, spawnPosition, Quaternion.identity);
+
+    // Set the hitbox as a child of the character's transform
+    hitbox.transform.SetParent(transform);
+
+    // Make the hitbox face the right direction
+    hitbox.transform.localScale = new Vector3(
+        attackDirection.x > 0 ? Mathf.Abs(hitbox.transform.localScale.x) : -Mathf.Abs(hitbox.transform.localScale.x),
+        hitbox.transform.localScale.y,
+        hitbox.transform.localScale.z
+    );
+
+    // Optional: Reset hitbox local position and rotation to match the parent if needed
+    hitbox.transform.localPosition = spawnPosition - (Vector2)transform.position;
+    hitbox.transform.localRotation = Quaternion.identity;
+
+    hitEnemies.Clear();
+
+    float hitboxDuration = 0.2f;
+    float timer = 0f;
+
+    while (timer < hitboxDuration)
     {
-        isSlashing = true;
-        float elapsed = 0f;
-
-        Vector3 downPosition = originalSwordPos + new Vector3(0f, -downwardOffset, 0f);
-        Quaternion downRotation = Quaternion.Euler(originalSwordRot.eulerAngles + new Vector3(0f, 0f, -tiltAngle));
-
-        while (elapsed < slashDownTime)
-        {
-            float t = elapsed / slashDownTime;
-            sword.transform.localPosition = Vector3.Lerp(originalSwordPos, downPosition, t);
-            sword.transform.localRotation = Quaternion.Lerp(originalSwordRot, downRotation, t);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        sword.transform.localPosition = downPosition;
-        sword.transform.localRotation = downRotation;
-
-        elapsed = 0f;
-
-        float direction = spriteRenderer.flipX ? -1f : 1f;
-        Vector3 backPosition = originalSwordPos + new Vector3(direction * slashDistance, 0f, 0f);
-        Quaternion finalRotation = originalSwordRot;
-
-        while (elapsed < slashSwingTime)
-        {
-            float t = elapsed / slashSwingTime;
-            sword.transform.localPosition = Vector3.Lerp(downPosition, backPosition, t);
-            sword.transform.localRotation = Quaternion.Lerp(downRotation, finalRotation, t);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        sword.transform.localPosition = backPosition;
-        sword.transform.localRotation = finalRotation;
-
-        DamageEnemiesInRange();
-
-        elapsed = 0f;
-
-        while (elapsed < returnTime)
-        {
-            float t = elapsed / returnTime;
-            sword.transform.localPosition = Vector3.Lerp(backPosition, originalSwordPos, t);
-            sword.transform.localRotation = Quaternion.Lerp(finalRotation, originalSwordRot, t);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        sword.transform.localPosition = originalSwordPos;
-        sword.transform.localRotation = originalSwordRot;
-
-        isSlashing = false;
+        DamageEnemiesInRange(hitbox);
+        timer += Time.deltaTime;
+        yield return null;
     }
 
-    void DamageEnemiesInRange()
+    Destroy(hitbox);
+
+    isSlashing = false;
+    yield return new WaitForSeconds(slashSwingTime);
+    canSlash = true;
+}
+
+    void DamageEnemiesInRange(GameObject hitbox)
     {
-        float radius = 0.8f;
-        Vector2 center = sword.transform.position;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(center, radius);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(hitbox.transform.position, 0.8f);
 
         foreach (var hit in hits)
         {
-            if (hit.CompareTag("Enemy"))
+            if (hit.CompareTag("Enemy") && !hitEnemies.Contains(hit))
             {
                 EnemyHealth enemy = hit.GetComponent<EnemyHealth>();
                 if (enemy != null)
                 {
                     enemy.TakeDamage(20);
+                    hitEnemies.Add(hit);
                 }
             }
         }
@@ -213,8 +216,6 @@ public class IsoCharacterController2D : MonoBehaviour
         {
             PlayerRespawnManager.Instance.RespawnPlayer();
         }
-
-        // Opsiyonel: hasar efekti vs.
     }
 
     public void RestoreHealth()
@@ -222,3 +223,4 @@ public class IsoCharacterController2D : MonoBehaviour
         currentHealth = maxHealth;
     }
 }
+

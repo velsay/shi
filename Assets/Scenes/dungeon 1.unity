@@ -4376,6 +4376,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9084349548376419969, guid: 2cd2d54a86c40404ebe7070996d26c0f, type: 3}
+      propertyPath: m_Size.x
+      value: 0.54473764
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084349548376419969, guid: 2cd2d54a86c40404ebe7070996d26c0f, type: 3}
+      propertyPath: m_Size.y
+      value: 0.78729594
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084349548376419969, guid: 2cd2d54a86c40404ebe7070996d26c0f, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.009105388
+      objectReference: {fileID: 0}
+    - target: {fileID: 9084349548376419969, guid: 2cd2d54a86c40404ebe7070996d26c0f, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.017295193
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4400,13 +4416,29 @@ PrefabInstance:
       propertyPath: anime
       value: 
       objectReference: {fileID: 1752888164}
+    - target: {fileID: 1573079889487165186, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: CirclePlace
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1573079889487165186, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: hitboxPrefab
+      value: 
+      objectReference: {fileID: 3275451640409652714, guid: 195eeb0aeb33d434e8a68bf71ecb51a9, type: 3}
+    - target: {fileID: 1573079889487165186, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: slashDistance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1573079889487165186, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: hitboxOffsetDistance
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 1600745212964492710, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_Size.x
       value: 0.22853968
       objectReference: {fileID: 0}
     - target: {fileID: 1600745212964492710, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_Size.y
-      value: 0.6740619
+      value: 0.69581604
       objectReference: {fileID: 0}
     - target: {fileID: 1600745212964492710, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_Offset.x
@@ -4414,7 +4446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1600745212964492710, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_Offset.y
-      value: 1.0891633
+      value: 0.10657909
       objectReference: {fileID: 0}
     - target: {fileID: 1600745212964492710, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_IsTrigger
@@ -4426,7 +4458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1600745212964492710, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_SpriteTilingProperty.pivot.y
-      value: -0.94736844
+      value: 0.36842102
       objectReference: {fileID: 0}
     - target: {fileID: 1600745212964492710, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
@@ -4487,6 +4519,10 @@ PrefabInstance:
     - target: {fileID: 7089193105885472272, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_Name
       value: player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7535143323701663423, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8240949645525601316, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: healthBar
