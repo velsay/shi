@@ -1,12 +1,15 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
+using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class IsoCharacterController2D : MonoBehaviour
 {
     public static IsoCharacterController2D instance;
-
+    public UnityEngine.UI.Image canbar;
     public Animator anime;
 
     [Header("Movement Settings")]
@@ -142,6 +145,7 @@ public class IsoCharacterController2D : MonoBehaviour
 
     IEnumerator SwordSlash()
     {
+        anime.SetTrigger("Attack");
         canSlash = false;
         isSlashing = true;
 
@@ -240,5 +244,6 @@ public class IsoCharacterController2D : MonoBehaviour
     {
         transform.position = respawnPoint;
         currentHealth = maxHealth;
+        canbar.fillAmount = 0.99f;
     }
 }

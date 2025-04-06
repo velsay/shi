@@ -823,7 +823,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac49d9b1053d604795a77e94139ee49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleportPoints: []
 --- !u!4 &302784136
 Transform:
   m_ObjectHideFlags: 0
@@ -3108,7 +3107,6 @@ GameObject:
   - component: {fileID: 1429838294}
   - component: {fileID: 1429838293}
   - component: {fileID: 1429838292}
-  - component: {fileID: 1429838291}
   m_Layer: 5
   m_Name: healthbar
   m_TagString: Untagged
@@ -3116,18 +3114,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1429838291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1429838290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb9b0ac93ac8d1947a271adc0eebcc96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1429838292
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5058,6 +5044,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1752888164}
     - target: {fileID: 1573079889487165186, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: canbar
+      value: 
+      objectReference: {fileID: 532956676}
+    - target: {fileID: 1573079889487165186, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: CirclePlace
       value: 
       objectReference: {fileID: 0}
@@ -5184,6 +5174,14 @@ PrefabInstance:
     - target: {fileID: 8315874809515818581, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.594
+      objectReference: {fileID: 0}
+    - target: {fileID: 8626950392882884205, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: m_Size.x
+      value: 0.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 8626950392882884205, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
+      propertyPath: m_Size.y
+      value: 0.76
       objectReference: {fileID: 0}
     - target: {fileID: 8626950392882884205, guid: 2456a20f5345b1248a31b709f4404fc6, type: 3}
       propertyPath: m_Sprite

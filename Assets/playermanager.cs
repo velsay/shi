@@ -18,6 +18,7 @@ public class PlayerRespawnManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
 
     void Start()
@@ -35,6 +36,7 @@ public class PlayerRespawnManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         player.transform.position = lastCheckpointPos;
+        Fill.Instance.ResetFill();
         
         IsoCharacterController2D playerScript = player.GetComponent<IsoCharacterController2D>();
         playerScript.RestoreHealth(); // Canı sıfırsa geri doldur
